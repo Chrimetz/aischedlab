@@ -1,0 +1,28 @@
+[project]
+name = "aischedlab"
+version = "0.1.0"
+description = "A laboratory for AI scheduling algorithms."
+authors = [
+    { name="Konshu"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "simpy",
+    "PyYAML",
+]
+scripts = { aischedlab = "core.cli.run_simulation:main" }
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=23.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
