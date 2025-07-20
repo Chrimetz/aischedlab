@@ -9,6 +9,7 @@ class Job:
     gpus: int
     cpus: int = 1
     memory: int = 0 # in GB
+    waiting_time: int = 0
 
 @dataclass
 class Node:
@@ -20,6 +21,14 @@ class Node:
     gpus_available: int
     cpus_available: int
     memory_available: int
+
+    power_idle: float = 100.0 # Watts in idle state
+    power_active: float = 300.0 # Watts in active state
+    energy_consumption: float = 0.0 # kWh
+
+    def utilization(self) -> float:
+        used_gpus = self.gpus_total - self.gpus_available
+        return (used_gpus / self.gpus_total) * 100 if self.gpus_total > 0 else 0
 
 @dataclass
 class Cluster:

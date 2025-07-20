@@ -17,7 +17,10 @@ class FIFOScheduler:
                 if (node.gpus_available >= job.gpus and
                     node.cpus_available >= job.cpus and
                     node.memory_available >= job.memory):
-                    
+
+                    # Record waiting time
+                    job.waiting_time = env.now - job.submit_time
+
                     node.gpus_available -= job.gpus
                     node.cpus_available -= job.cpus 
                     node.memory_available -= job.memory
