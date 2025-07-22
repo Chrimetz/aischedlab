@@ -3,6 +3,7 @@ from core.models import Job, Cluster
 from core.strategies.fifo import FIFOScheduler
 import logging
 import numpy as np
+from core.metric_collector import MetricCollector
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ class SimulationEngine:
         self.cluster = cluster
         self.jobs = sorted(jobs, key=lambda j: j.submit_time)
         self.scheduler_cls = scheduler_cls
+        self.metrics = MetricCollector()
 
     def run(self):
         env = simpy.Environment()
@@ -24,7 +26,7 @@ class SimulationEngine:
         job_events = []
         for job in self.jobs:
             job_event = env.event()
-            env.process(self._job_wrapper(scheduler, env, job, job_event))
+            env.process(self._job_wrapper(scheduler, env, job, job_event, self.metrics))
             job_events.append(job_event)
 
         logger.info("Starting simulation...")
@@ -37,7 +39,7 @@ class SimulationEngine:
 
         env.run()
         logger.info("Simulation completed.")
-        self.print_summary()
+        self.metrics.report(output_file=f"metrics_scheduler_{self.scheduler_cls.__name__}.csv")
 
     @staticmethod
     def track_energy(env, cluster: Cluster, done_event, interval=1):
@@ -47,8 +49,8 @@ class SimulationEngine:
             yield env.timeout(interval)
 
     @staticmethod
-    def _job_wrapper(scheduler, env, job, job_event):
-        yield from scheduler.schedule(env, job)
+    def _job_wrapper(scheduler, env, job, job_event, metrics: MetricCollector):
+        yield from scheduler.schedule(env, job, metrics)
         job_event.succeed()
 
     def print_summary(self):

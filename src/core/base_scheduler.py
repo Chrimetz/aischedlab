@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import simpy
 from core.models import Job, Cluster
+from core.metric_collector import MetricCollector
 
 class BaseScheduler(ABC):
     def __init__(self, cluster: Cluster):
@@ -13,7 +14,7 @@ class BaseScheduler(ABC):
         self.jobs = []
     
     @abstractmethod
-    def schedule(self, env: simpy.Environment, job: Job):
+    def schedule(self, env: simpy.Environment, job: Job, metrics: MetricCollector):
         """
         Schedule a job in the simulation environment.
         
@@ -21,4 +22,3 @@ class BaseScheduler(ABC):
         :param job: The job to be scheduled.
         """
         pass
-        
