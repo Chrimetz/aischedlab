@@ -1,13 +1,13 @@
 from core.models import Job, Cluster
 import simpy
 import logging
+from core.base_scheduler import BaseScheduler
 
 logger = logging.getLogger(__name__)
 
-class SJFJobScheduler:
+class SJFJobScheduler(BaseScheduler):
     def __init__(self, cluster: Cluster):
-        self.cluster = cluster
-        self.jobs = []
+        super().__init__(cluster)
 
     def schedule(self, env: simpy.Environment, job: Job):
         yield env.timeout(job.submit_time - env.now)
