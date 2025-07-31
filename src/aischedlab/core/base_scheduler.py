@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import simpy
-from core.models import Job, Cluster
-from core.metric_collector import MetricCollector
+from aischedlab.core.models import Job, Cluster
+from aischedlab.core.metric_collector import MetricCollector
 
 class BaseScheduler(ABC):
     def __init__(self, cluster: Cluster):

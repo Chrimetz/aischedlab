@@ -2,6 +2,10 @@ import logging
 import csv
 import os
 
+import simpy
+
+from aischedlab.core.models import Job, Node, Cluster
+
 logger = logging.getLogger(__name__)
 
 class MetricCollector:
@@ -51,21 +55,21 @@ class MetricCollector:
             "min_cluster_utilization_percent": min_util
         }
 
-    def record_job_start(self, job, env):
+    def record_job_start(self, job: Job, env: simpy.Environment):
         job.waiting_time = env.now - job.submit_time
         self.waiting_times.append({'job': job.name, 'waiting_time': job.waiting_time})
         self.job_events.append({'job': job.name, 'event': 'started', 'time': env.now})
 
-    def record_job_end(self, job, env):
+    def record_job_end(self, job: Job, env: simpy.Environment):
         self.job_events.append({'job': job.name, 'event': 'ended', 'time': env.now})
 
-    def record_job_submission(self, job, env):
+    def record_job_submission(self, job: Job, env: simpy.Environment):
         self.job_events.append({'job': job.name, 'event': 'submitted', 'time': env.now})
 
-    def record_energy(self, node):
+    def record_energy(self, node: Node):
         self.energy_usage.append({'node': node.name, 'energy': node.energy_consumption})
 
-    def record_utilization(self, env, cluster):
+    def record_utilization(self, env: simpy.Environment, cluster: Cluster):
         total_gpus = sum(node.gpus_total for node in cluster.nodes)
         total_cpus = sum(node.cpus_total for node in cluster.nodes)
         total_mem = sum(node.memory_total for node in cluster.nodes)
@@ -77,7 +81,7 @@ class MetricCollector:
         utilization = (used_resources / total_resources) * 100 if total_resources > 0 else 0
         self.utilization_samples.append({'time': env.now, 'utilization_percent': utilization})
 
-    def report(self, output_file="metrics_scheduler"):
+    def report(self, output_file: str ="metrics_scheduler"):
         os.makedirs("metrics", exist_ok=True)
 
         # --- Job metrics ---
@@ -90,7 +94,7 @@ class MetricCollector:
             writer.writeheader()
             for job in jobs:                
                 row = {
-                    "job_name": job.name,
+                    "job_name": job,
                     "waiting_time_seconds": next((w['waiting_time'] for w in self.waiting_times if w['job'] == job), ''),
                     "submit_time": next((e['time'] for e in self.job_events if e['job'] == job and e['event'] == 'submitted'), ''),
                     "start_time": next((e['time'] for e in self.job_events if e['job'] == job and e['event'] == 'started'), ''),

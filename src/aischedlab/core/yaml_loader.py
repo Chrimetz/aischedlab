@@ -1,6 +1,6 @@
 import re
 import yaml
-from core.models import Cluster, Job, Node
+from aischedlab.core.models import Cluster, Job, Node
 import logging
 
 logger = logging.getLogger(__name__)

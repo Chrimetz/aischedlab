@@ -11,8 +11,10 @@ license = { text = "Apache-2.0" }
 dependencies = [
     "simpy",
     "PyYAML",
+    "numpy",
 ]
-scripts = { aischedlab = "core.cli.run_simulation:main" }
+scripts = { aischedlab = "aischedlab.cli.run_simulation:main" }
+
 
 [project.optional-dependencies]
 dev = [
@@ -26,3 +28,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

@@ -1,9 +1,9 @@
 import simpy
-from core.models import Job, Cluster
-from core.strategies.fifo import FIFOScheduler
+from aischedlab.core.models import Job, Cluster
+from aischedlab.core.strategies.fifo import FIFOScheduler
 import logging
 import numpy as np
-from core.metric_collector import MetricCollector
+from aischedlab.core.metric_collector import MetricCollector
 
 logger = logging.getLogger(__name__)
 

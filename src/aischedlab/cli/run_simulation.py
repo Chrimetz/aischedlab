@@ -1,9 +1,9 @@
 import argparse
 import logging
 from datetime import datetime
-from core.simengine import SimulationEngine
-from core.yaml_loader import load_jobs, load_cluster
-from core.strategies import BackfillScheduler, SJFJobScheduler, FIFOScheduler
+from aischedlab.core.simengine import SimulationEngine
+from aischedlab.core.yaml_loader import load_jobs, load_cluster
+from aischedlab.core.strategies import BackfillScheduler, SJFJobScheduler, FIFOScheduler
 
 log_filename = f"ai_sched_lab_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 logging.basicConfig(

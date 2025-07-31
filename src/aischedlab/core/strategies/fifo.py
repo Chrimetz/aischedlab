@@ -1,8 +1,8 @@
-from core.models import Job, Cluster
+from aischedlab.core.models import Job, Cluster
 import simpy
 import logging
-from core.base_scheduler import BaseScheduler
-from core.metric_collector import MetricCollector
+from aischedlab.core.base_scheduler import BaseScheduler
+from aischedlab.core.metric_collector import MetricCollector
 
 logger = logging.getLogger(__name__)
 
